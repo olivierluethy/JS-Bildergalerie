@@ -10,7 +10,7 @@ nav {
 }
 
 nav h1 {
-    margin-left: 45rem;
+    margin-left: 45%;
     color: white;
 }
 
@@ -20,14 +20,24 @@ nav h1 {
 }
 
 #container #imageGallery {
-    display: flex;
-    width: 10%;
-    margin-right: 2rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
 }
 
-#container img {
-    width: 5%;
+#container #imageGallery img {
+    margin-right: 1rem;
+}
+
+#container .addImage {
+    display: block;
+    width: 7%;
+}
+
+#container .addImage img {
+    margin-top: 5rem;
+    width: 80%;
     cursor: pointer;
+    margin-left: 1rem;
 }
 
 

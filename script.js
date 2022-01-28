@@ -1,3 +1,13 @@
+/* Local Storage Key */
+let key = 0;
+
+window.onload = function exampleFunction() {
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        alert(`${key}: ${localStorage.getItem(key)}`);
+    }
+}
+
 // Get the modal
 var modal = document.getElementById("myModal");
 
@@ -32,4 +42,7 @@ function addImage() {
     var container = document.getElementById("imageGallery");
     container.appendChild(img);
     modal.style.display = "none";
+    localStorage.setItem(key, img.src)
+    alert(localStorage.getItem(key))
+    key++;
 }
