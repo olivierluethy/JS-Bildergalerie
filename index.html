@@ -1,44 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="A self-curated visual library that remembers where every image came from."
+    />
+    <title>Provenance Archive</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="images/pin_B.png">
-    <title>JS-Bildgalerie</title>
-</head>
+    <!-- Set theme before paint to avoid a flash of the wrong colour scheme. -->
+    <script>
+      (function () {
+        try {
+          var p = localStorage.getItem('pa:theme');
+          var dark =
+            p === 'dark' ||
+            (!p && matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
 
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Familjen+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="dist/app.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='9' r='6' fill='%23E24B2E'/%3E%3Crect x='11' y='9' width='2' height='12' rx='1' fill='%23182420'/%3E%3C/svg%3E"
+    />
+  </head>
 
-    <nav>
-        <h1>JS-Bildgalerie</h1>
-    </nav>
-
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h1>Geben sie hier ihre URL ein</h1>
-            <input size="100" type="text" id="eingabe" name="imgURL">
-            <button id="mehr">Laden</button>
+  <body class="min-h-screen">
+    <!-- ===================== Top chrome ===================== -->
+    <header
+      class="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md"
+    >
+      <div
+        class="mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 md:px-8"
+      >
+        <!-- Wordmark -->
+        <div class="flex items-baseline gap-2.5">
+          <span aria-hidden="true" class="relative -top-0.5">
+            <svg viewBox="0 0 24 24" class="size-5">
+              <circle cx="12" cy="9" r="6" class="fill-pin" />
+              <rect x="11" y="9" width="2" height="12" rx="1" class="fill-ink" />
+            </svg>
+          </span>
+          <h1 class="font-display text-2xl leading-none text-ink">
+            Provenance Archive
+          </h1>
+          <span
+            id="itemCount"
+            class="hidden font-mono text-micro uppercase tracking-[0.08em] text-ink-soft sm:inline"
+          ></span>
         </div>
-    </div>
 
-    <div id="container">
-        <div id="imageGallery">
-
+        <!-- View switcher -->
+        <div
+          role="tablist"
+          aria-label="Views"
+          class="order-3 flex w-full items-center gap-1 rounded-lg bg-surface-2 p-1 md:order-none md:ml-2 md:w-auto"
+        >
+          <button
+            role="tab"
+            id="tab-gallery"
+            data-view="gallery"
+            aria-selected="true"
+            class="segment flex-1 justify-center md:flex-none"
+          >
+            <span data-icon="layout-grid" data-class="size-4"></span>Gallery
+          </button>
+          <button
+            role="tab"
+            id="tab-timeline"
+            data-view="timeline"
+            aria-selected="false"
+            class="segment flex-1 justify-center md:flex-none"
+          >
+            <span data-icon="calendar-clock" data-class="size-4"></span>Timeline
+          </button>
+          <button
+            role="tab"
+            id="tab-network"
+            data-view="network"
+            aria-selected="false"
+            class="segment flex-1 justify-center md:flex-none"
+          >
+            <span data-icon="share-2" data-class="size-4"></span>Map
+          </button>
         </div>
-        <div class="addImage">
-            <img src="images/addImage.png" id="myBtn" alt="">
+
+        <!-- Right cluster -->
+        <div class="ml-auto flex items-center gap-2">
+          <label class="relative hidden items-center sm:flex">
+            <span
+              class="pointer-events-none absolute left-3 text-ink-soft"
+              data-icon="search"
+              data-class="size-4"
+            ></span>
+            <input
+              id="search"
+              type="search"
+              placeholder="filter by domain"
+              aria-label="Filter by domain"
+              class="field w-44 py-2 pl-9 font-mono text-label lg:w-56"
+            />
+          </label>
+          <button id="themeToggle" type="button" class="btn-icon"></button>
+          <button id="addBtn" type="button" class="btn-primary">
+            <span data-icon="plus" data-class="size-[18px]"></span>
+            <span class="hidden sm:inline">Add image</span>
+          </button>
         </div>
-    </div>
+      </div>
+    </header>
 
-    <script src="script.js"></script>
+    <!-- ===================== Views ===================== -->
+    <main class="mx-auto max-w-[1600px] px-4 py-6 md:px-8 md:py-8">
+      <section id="view-gallery" data-view-panel="gallery"></section>
+      <section id="view-timeline" data-view-panel="timeline" hidden></section>
+      <section id="view-network" data-view-panel="network" hidden></section>
+    </main>
 
-</body>
+    <!-- Modal + lightbox mount into these; created by JS. -->
+    <div id="modalRoot"></div>
+    <div id="lightboxRoot"></div>
 
+    <script type="module" src="src/js/app.js"></script>
+  </body>
 </html>
