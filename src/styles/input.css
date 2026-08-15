@@ -111,6 +111,39 @@
     @apply bg-surface text-ink shadow-card;
   }
 
+  /* Tooltips ------------------------------------------------------ */
+  /* Styled tooltip shown below an element carrying data-tip. Reliable and
+     theme-aware (unlike the native title attribute). */
+  .tip {
+    @apply relative;
+  }
+  .tip::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-2px);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    background: rgb(var(--ink));
+    color: rgb(var(--bg));
+    font-family: 'Space Mono', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    padding: 5px 7px;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.18);
+    z-index: 30;
+  }
+  .tip:hover::after,
+  .tip:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   /* Loading shimmer ---------------------------------------------- */
   .shimmer {
     @apply relative overflow-hidden bg-surface-2;

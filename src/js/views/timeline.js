@@ -1,6 +1,11 @@
 // Timeline view: chronological, grouped by day, each entry showing the image,
 // its source, and the time added. Day markers use the day's dominant pin colour.
-import { provTagHtml, formatBadgeHtml, wireCardImage } from '../components.js';
+import {
+  provTagHtml,
+  formatBadgeHtml,
+  wireCardImage,
+  applyTooltips,
+} from '../components.js';
 import { iconSvg } from '../icons.js';
 import { dayKey, formatDay, formatTime, pinColor, escapeHtml } from '../util.js';
 
@@ -89,6 +94,7 @@ export function renderTimeline(container, records, actions) {
 
   container.innerHTML = `<div class="mx-auto max-w-3xl">${sections}</div>`;
   container.querySelectorAll('[data-card]').forEach(wireCardImage);
+  applyTooltips(container);
 
   // Replace any handler from a previous render before attaching a new one.
   if (container._tlHandler) container.removeEventListener('click', container._tlHandler);

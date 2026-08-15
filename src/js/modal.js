@@ -1,6 +1,7 @@
 // Add-image modal: type a URL, paste (button + Ctrl/Cmd+V), or drag a link.
 // Live preview with derived provenance + format, duplicate detection.
 import { iconSvg, hydrateIcons } from './icons.js';
+import { applyTooltips } from './components.js';
 import { toast } from './toast.js';
 import * as store from './store.js';
 import {
@@ -294,6 +295,7 @@ export function open() {
   const root = document.getElementById('modalRoot');
   root.innerHTML = TEMPLATE;
   hydrateIcons(root);
+  applyTooltips(root);
 
   const q = (sel) => root.querySelector(sel);
   refs = {

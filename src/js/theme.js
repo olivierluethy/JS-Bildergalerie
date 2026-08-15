@@ -34,11 +34,10 @@ function updateButton(btn, dark) {
   btn.replaceChildren(
     iconEl(dark ? 'sun' : 'moon', { className: 'size-[18px]' }),
   );
-  btn.setAttribute(
-    'aria-label',
-    dark ? 'Switch to light theme' : 'Switch to dark theme',
-  );
-  btn.setAttribute('title', dark ? 'Light theme' : 'Dark theme');
+  const label = dark ? 'Switch to light theme' : 'Switch to dark theme';
+  btn.classList.add('tip');
+  btn.setAttribute('aria-label', label);
+  btn.setAttribute('data-tip', label);
 }
 
 /** Apply the persisted/system theme immediately (call before paint). */
