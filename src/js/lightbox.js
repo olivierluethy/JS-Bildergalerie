@@ -20,36 +20,36 @@ const MIN = 1;
 const MAX = 5;
 
 const TEMPLATE = `
-<div data-lb class="fixed inset-0 z-[55] flex flex-col bg-ink/90 backdrop-blur-md animate-fade-in"
+<div data-lb class="fixed inset-0 z-[55] flex flex-col bg-black/90 backdrop-blur-md animate-fade-in"
      role="dialog" aria-modal="true" aria-label="Image viewer">
   <!-- Top bar -->
-  <div class="flex items-center gap-3 px-4 py-3 text-bg">
-    <div data-lb-prov class="min-w-0 flex-1 [&_.prov-tag]:text-bg/80"></div>
+  <div class="flex items-center gap-3 px-4 py-3 text-white">
+    <div data-lb-prov class="min-w-0 flex-1 [&_.prov-tag]:text-white/80"></div>
     <div class="flex items-center gap-1">
-      <button type="button" data-lb="zoomout" class="btn-icon text-bg/80 hover:bg-white/10 hover:text-bg" aria-label="Zoom out">${iconSvg(
+      <button type="button" data-lb="zoomout" class="btn-icon text-white/80 hover:bg-white/10 hover:text-white" aria-label="Zoom out">${iconSvg(
         'zoom-out',
         { className: 'size-5' },
       )}</button>
-      <span data-lb-zoom class="w-12 text-center font-mono text-micro text-bg/70"></span>
-      <button type="button" data-lb="zoomin" class="btn-icon text-bg/80 hover:bg-white/10 hover:text-bg" aria-label="Zoom in">${iconSvg(
+      <span data-lb-zoom class="w-12 text-center font-mono text-micro text-white/70"></span>
+      <button type="button" data-lb="zoomin" class="btn-icon text-white/80 hover:bg-white/10 hover:text-white" aria-label="Zoom in">${iconSvg(
         'zoom-in',
         { className: 'size-5' },
       )}</button>
       <span class="mx-1 h-5 w-px bg-white/15"></span>
-      <button type="button" data-lb="source" class="btn-icon text-bg/80 hover:bg-white/10 hover:text-bg" aria-label="Open source">${iconSvg(
+      <button type="button" data-lb="source" class="btn-icon text-white/80 hover:bg-white/10 hover:text-white" aria-label="Open source">${iconSvg(
         'external-link',
         { className: 'size-5' },
       )}</button>
-      <button type="button" data-lb="copy" class="btn-icon text-bg/80 hover:bg-white/10 hover:text-bg" aria-label="Copy URL">${iconSvg(
+      <button type="button" data-lb="copy" class="btn-icon text-white/80 hover:bg-white/10 hover:text-white" aria-label="Copy URL">${iconSvg(
         'copy',
         { className: 'size-5' },
       )}</button>
-      <button type="button" data-lb="delete" class="btn-icon text-bg/80 hover:bg-white/10 hover:text-pin" aria-label="Delete">${iconSvg(
+      <button type="button" data-lb="delete" class="btn-icon text-white/80 hover:bg-white/10 hover:text-pin" aria-label="Delete">${iconSvg(
         'trash-2',
         { className: 'size-5' },
       )}</button>
       <span class="mx-1 h-5 w-px bg-white/15"></span>
-      <button type="button" data-lb="close" class="btn-icon text-bg/80 hover:bg-white/10 hover:text-bg" aria-label="Close">${iconSvg(
+      <button type="button" data-lb="close" class="btn-icon text-white/80 hover:bg-white/10 hover:text-white" aria-label="Close">${iconSvg(
         'x',
         { className: 'size-5' },
       )}</button>
@@ -59,21 +59,21 @@ const TEMPLATE = `
   <!-- Stage -->
   <div data-lb-stage class="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden px-4 select-none">
     <button type="button" data-lb="prev" aria-label="Previous image"
-      class="absolute left-3 z-10 btn-icon size-11 bg-black/30 text-bg hover:bg-black/50">${iconSvg(
+      class="absolute left-3 z-10 btn-icon size-11 bg-black/30 text-white hover:bg-black/50">${iconSvg(
         'chevron-left',
         { className: 'size-6' },
       )}</button>
     <img data-lb-img alt="" draggable="false"
       class="max-h-full max-w-full object-contain shadow-pop will-change-transform" />
     <button type="button" data-lb="next" aria-label="Next image"
-      class="absolute right-3 z-10 btn-icon size-11 bg-black/30 text-bg hover:bg-black/50">${iconSvg(
+      class="absolute right-3 z-10 btn-icon size-11 bg-black/30 text-white hover:bg-black/50">${iconSvg(
         'chevron-right',
         { className: 'size-6' },
       )}</button>
   </div>
 
   <!-- Bottom meta -->
-  <div class="flex items-center justify-between gap-3 px-4 py-3 font-mono text-micro text-bg/70">
+  <div class="flex items-center justify-between gap-3 px-4 py-3 font-mono text-micro text-white/70">
     <span data-lb-cat></span>
     <span data-lb-count></span>
   </div>
