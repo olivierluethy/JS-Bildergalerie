@@ -30,10 +30,20 @@ export function formatBadgeHtml(record, extraClass = '') {
 export function actionBtnHtml(action, name, label, extra = '') {
   return `<button type="button" data-action="${action}" aria-label="${escapeHtml(
     label,
-  )}" title="${escapeHtml(label)}"
-      class="btn-icon bg-bg/70 backdrop-blur hover:bg-bg ${extra}">
+  )}" data-tip="${escapeHtml(label)}"
+      class="btn-icon tip bg-bg/70 backdrop-blur hover:bg-bg ${extra}">
       ${iconSvg(name, { className: 'size-[17px]' })}
     </button>`;
+}
+
+/** Give every icon-only button under `root` a styled hover tooltip. */
+export function applyTooltips(root) {
+  root
+    .querySelectorAll('button[aria-label]:not([data-tip])')
+    .forEach((b) => {
+      b.classList.add('tip');
+      b.setAttribute('data-tip', b.getAttribute('aria-label'));
+    });
 }
 
 /** Full gallery card markup for one record. */
@@ -50,7 +60,8 @@ export function cardHtml(record) {
         <img
           src="${escapeHtml(record.url)}"
           alt="${alt}"
-          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
           class="relative z-[1] size-full cursor-zoom-in object-cover opacity-0 transition-opacity duration-300"
           data-thumb data-action="open" />
 
@@ -95,8 +106,13 @@ export function wireCardImage(card) {
   const broken = card.querySelector('[data-broken]');
   if (!img) return;
 
+  // A successful load always wins and clears the broken state, so a spurious
+  // early error (e.g. a fetch aborted by a rapid re-render) self-heals once the
+  // image really loads.
   const reveal = () => {
+    img.style.display = '';
     img.style.opacity = '1';
+    if (broken) broken.hidden = true;
     shimmer?.remove();
   };
   const fail = () => {
@@ -105,10 +121,10 @@ export function wireCardImage(card) {
     if (broken) broken.hidden = false;
   };
 
-  if (img.complete && img.naturalWidth > 0) reveal();
-  else if (img.complete && img.naturalWidth === 0) fail();
-  img.addEventListener('load', reveal, { once: false });
+  // Keep listening even after a failure — never use { once }.
+  img.addEventListener('load', reveal);
   img.addEventListener('error', fail);
+  if (img.complete && img.naturalWidth > 0) reveal();
 
   const retry = card.querySelector('[data-action="retry"]');
   retry?.addEventListener('click', (e) => {
@@ -116,6 +132,9 @@ export function wireCardImage(card) {
     if (broken) broken.hidden = true;
     img.style.display = '';
     img.style.opacity = '0';
-    img.src = `${img.src.split('#')[0]}#r${Date.now()}`;
+    // Cache-bust with a query param (fragments don't force a refetch).
+    const base = img.getAttribute('src').split('#')[0].replace(/([?&])_r=\d+/, '$1');
+    const sep = base.includes('?') ? '&' : '?';
+    img.src = `${base}${sep}_r=${Date.now()}`;
   });
 }

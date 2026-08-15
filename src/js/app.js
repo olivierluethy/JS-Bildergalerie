@@ -45,6 +45,17 @@ function updateCount() {
   els.count.textContent = n === 0 ? 'empty' : `${n} ${n === 1 ? 'image' : 'images'}`;
 }
 
+// Open an image's source in a new tab. Uses the actual image URL (always a
+// real resource) and warns if the browser blocks the pop-up.
+function openSource(rec) {
+  const target = rec?.url || rec?.sourcePage;
+  if (!target) return;
+  const win = window.open(target, '_blank', 'noopener,noreferrer');
+  if (!win) {
+    toast('Pop-up blocked — allow pop-ups to open the source', { variant: 'warn' });
+  }
+}
+
 // ---- Card actions (shared by gallery + timeline) --------------------------
 const actions = {
   add: () => modal.open(),
@@ -58,8 +69,7 @@ const actions = {
   },
   source: (id) => {
     const rec = store.getById(id);
-    if (rec && (rec.sourcePage || rec.url))
-      window.open(rec.sourcePage || rec.url, '_blank', 'noopener');
+    if (rec) openSource(rec);
   },
   copy: (id) => {
     const rec = store.getById(id);
@@ -149,7 +159,7 @@ els.search.addEventListener(
 els.addBtn.addEventListener('click', () => modal.open());
 modal.initModal({
   onAdded: (record) => {
-    render();
+    // The store subscription already re-rendered; just highlight the new card.
     if (activeView === 'gallery') {
       requestAnimationFrame(() => highlightCard(els.panels.gallery, record.id));
     }
