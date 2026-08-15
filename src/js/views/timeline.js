@@ -27,10 +27,10 @@ function entryHtml(rec) {
   return `<div class="group flex items-center gap-3 rounded-xl border border-line bg-surface p-2.5 shadow-card transition-colors hover:border-ink/20"
       data-card data-id="${rec.id}">
       <div class="relative size-16 shrink-0 overflow-hidden rounded-lg bg-surface-2">
-        <div class="shimmer absolute inset-0" data-shimmer></div>
+        <div class="shimmer absolute inset-0 z-0" data-shimmer></div>
         <img src="${escapeHtml(rec.url)}" alt="Image from ${escapeHtml(rec.domain || 'unknown')}"
-          loading="lazy" data-thumb data-action="open"
-          class="relative z-[1] size-full cursor-zoom-in object-cover opacity-0 transition-opacity duration-300" />
+          decoding="async" data-thumb data-action="open"
+          class="relative z-[1] size-full cursor-zoom-in object-cover" />
         <div data-broken hidden class="absolute inset-0 z-[2] flex items-center justify-center bg-surface-2 text-ink-soft">
           ${iconSvg('image-off', { className: 'size-5' })}
         </div>

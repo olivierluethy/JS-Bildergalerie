@@ -56,13 +56,12 @@ export function cardHtml(record) {
       data-card data-id="${record.id}">
 
       <div class="relative aspect-[4/3] overflow-hidden bg-surface-2">
-        <div class="shimmer absolute inset-0" data-shimmer></div>
+        <div class="shimmer absolute inset-0 z-0" data-shimmer></div>
         <img
           src="${escapeHtml(record.url)}"
           alt="${alt}"
           decoding="async"
-          referrerpolicy="no-referrer"
-          class="relative z-[1] size-full cursor-zoom-in object-cover opacity-0 transition-opacity duration-300"
+          class="relative z-[1] size-full cursor-zoom-in object-cover"
           data-thumb data-action="open" />
 
         <!-- Broken state -->
@@ -106,14 +105,15 @@ export function wireCardImage(card) {
   const broken = card.querySelector('[data-broken]');
   if (!img) return;
 
-  // A successful load always wins and clears the broken state, so a spurious
-  // early error (e.g. a fetch aborted by a rapid re-render) self-heals once the
-  // image really loads.
+  // The image is visible by default (like any <img>); the shimmer sits behind
+  // it and shows through until pixels arrive. JS only removes the shimmer on
+  // load and toggles the broken overlay on error — it never gates visibility.
+  // A later successful load clears a previous error (self-healing).
   const reveal = () => {
     img.style.display = '';
-    img.style.opacity = '1';
     if (broken) broken.hidden = true;
     shimmer?.remove();
+    img.classList.add('animate-fade-in');
   };
   const fail = () => {
     shimmer?.remove();
@@ -124,7 +124,10 @@ export function wireCardImage(card) {
   // Keep listening even after a failure — never use { once }.
   img.addEventListener('load', reveal);
   img.addEventListener('error', fail);
-  if (img.complete && img.naturalWidth > 0) reveal();
+  if (img.complete) {
+    if (img.naturalWidth > 0) reveal();
+    else fail();
+  }
 
   const retry = card.querySelector('[data-action="retry"]');
   retry?.addEventListener('click', (e) => {
