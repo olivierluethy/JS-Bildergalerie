@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ *
+ * Design tokens — single source of truth is docs/STYLEGUIDE.md.
+ * Stored as space-separated RGB channels so Tailwind's
+ * rgb(var(--token) / <alpha-value>) pattern enables opacity utilities.
+ * ------------------------------------------------------------------ */
+@layer base {
+  :root {
+    --bg: 232 234 228;
+    --surface: 251 251 248;
+    --surface-2: 241 242 236;
+    --ink: 24 36 32;
+    --ink-soft: 88 97 88;
+    --line: 211 215 205;
+    --brand: 14 110 106;
+    --brand-deep: 10 79 76;
+    --pin: 226 75 46;
+    --pin-deep: 193 58 32;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --bg: 14 21 18;
+    --surface: 22 29 26;
+    --surface-2: 30 39 35;
+    --ink: 232 236 230;
+    --ink-soft: 147 160 153;
+    --line: 42 51 46;
+    --brand: 63 182 174;
+    --brand-deep: 92 200 192;
+    --pin: 242 98 68;
+    --pin-deep: 255 122 92;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+  }
+
+  /* Consistent focus affordance across every interactive element. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-bg;
+  }
+
+  ::selection {
+    background: rgb(var(--pin) / 0.22);
+  }
+
+  /* Custom scrollbars keep the archival, quiet register. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--line)) transparent;
+  }
+}
+
+@layer components {
+  /* Buttons ------------------------------------------------------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2
+      text-sm font-medium cursor-pointer transition-all duration-150
+      active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-pin text-white hover:bg-pin-deep shadow-sm;
+  }
+  .btn-secondary {
+    @apply btn bg-surface-2 text-ink border border-line hover:border-ink/30;
+  }
+  .btn-icon {
+    @apply inline-flex size-9 items-center justify-center rounded-full
+      text-ink-soft cursor-pointer transition-colors duration-150
+      hover:bg-surface-2 hover:text-ink;
+  }
+
+  /* Inputs -------------------------------------------------------- */
+  .field {
+    @apply w-full rounded-lg border border-line bg-surface px-3.5 py-2.5
+      text-sm text-ink placeholder:text-ink-soft/70 transition-colors
+      duration-150 focus:border-brand;
+  }
+
+  /* Provenance tag (signature) ----------------------------------- */
+  .prov-tag {
+    @apply inline-flex items-center gap-1.5 font-mono text-label
+      text-ink-soft min-w-0;
+  }
+  .prov-dot {
+    @apply size-2 shrink-0 rounded-full;
+  }
+
+  /* Format badge -------------------------------------------------- */
+  .badge {
+    @apply inline-flex items-center rounded-full border border-line
+      bg-surface-2/90 px-2 py-0.5 font-mono text-micro uppercase
+      tracking-[0.08em] text-ink-soft backdrop-blur-sm;
+  }
+
+  /* Segmented view switcher -------------------------------------- */
+  .segment {
+    @apply inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm
+      font-medium text-ink-soft cursor-pointer transition-all duration-150
+      hover:text-ink;
+  }
+  .segment[aria-selected='true'] {
+    @apply bg-surface text-ink shadow-card;
+  }
+
+  /* Loading shimmer ---------------------------------------------- */
+  .shimmer {
+    @apply relative overflow-hidden bg-surface-2;
+  }
+  .shimmer::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full animate-shimmer;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--ink) / 0.06),
+      transparent
+    );
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Reduced motion: keep opacity fades, drop transforms/animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

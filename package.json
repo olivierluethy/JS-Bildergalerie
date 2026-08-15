@@ -1,0 +1,37 @@
+{
+  "name": "provenance-archive",
+  "version": "2.0.0",
+  "description": "A self-curated visual library that remembers where every image came from. Add images by URL, browse them beautifully, and map the links between images and their source websites.",
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/styles/input.css -o ./dist/app.css --minify",
+    "watch:css": "tailwindcss -i ./src/styles/input.css -o ./dist/app.css --watch",
+    "serve": "npx --yes serve@14 -l 5173 .",
+    "dev": "npm run watch:css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olivierluethy/JS-Bildergalerie.git"
+  },
+  "keywords": [
+    "image-gallery",
+    "provenance",
+    "localstorage",
+    "tailwindcss",
+    "d3",
+    "vanilla-js"
+  ],
+  "author": "olivierluethy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olivierluethy/JS-Bildergalerie/issues"
+  },
+  "homepage": "https://github.com/olivierluethy/JS-Bildergalerie#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "d3-force": "^3.0.0",
+    "lucide": "^0.460.0"
+  }
+}
