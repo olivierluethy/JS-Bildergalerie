@@ -121,12 +121,23 @@ export function wireCardImage(card) {
     if (broken) broken.hidden = false;
   };
 
-  // Keep listening even after a failure — never use { once }.
+  // The load/error events are authoritative — keep listening even after a
+  // failure (never { once }) so a later success self-heals a stale error.
   img.addEventListener('load', reveal);
   img.addEventListener('error', fail);
+
+  // If the image finished before we attached listeners (e.g. it was cached by
+  // the modal's preview), those events won't fire again. Crucially, do NOT
+  // guess from naturalWidth here: a cached image is often `complete` while its
+  // width is still 0 mid-decode — the old `else fail()` wrongly hid it, which
+  // is why it only appeared in the lightbox. Let decode() decide instead.
   if (img.complete) {
-    if (img.naturalWidth > 0) reveal();
-    else fail();
+    if (img.naturalWidth > 0) {
+      reveal();
+    } else if (typeof img.decode === 'function') {
+      img.decode().then(reveal, fail);
+    }
+    // No decode() support → the load/error listeners remain the fallback.
   }
 
   const retry = card.querySelector('[data-action="retry"]');
