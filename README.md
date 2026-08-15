@@ -56,6 +56,23 @@ Tailwind is the **only** styling — utilities and an `@apply` component layer i
 `src/styles/input.css` compile to the single `dist/app.css`. There is no
 hand-written stylesheet.
 
+## Testing
+
+Browser tests use **Playwright** (Chromium). Fixtures under `tests/fixtures/` are
+local images, so the tests need no external network.
+
+```bash
+npx playwright install chromium   # one-time
+npm run test:e2e                  # standard Playwright runner
+```
+
+`npm run verify:browser` runs the same checks through Playwright's Chromium
+**in-process** — useful in restricted sandboxes/CI where the full runner can't
+spawn its browser worker. It covers the regression that made an added image show
+only after opening the lightbox: a cached image can report `complete === true`
+while `naturalWidth` is still `0` mid-decode, so visibility must be decided by
+`img.decode()` / the load event, never by a synchronous width guess.
+
 ## Project structure
 
 ```
