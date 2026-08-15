@@ -2,7 +2,7 @@
 // (Esc / ← / →), and quick actions (open source, copy URL, delete).
 import { iconSvg, hydrateIcons } from './icons.js';
 import { toast } from './toast.js';
-import { provTagHtml, formatBadgeHtml } from './components.js';
+import { provTagHtml, formatBadgeHtml, applyTooltips } from './components.js';
 import { escapeHtml, formatDay, formatTime } from './util.js';
 
 let list = [];
@@ -206,10 +206,17 @@ function handleAction(action) {
     case 'zoomout':
       setZoom(scale - 0.5);
       break;
-    case 'source':
-      if (rec.sourcePage || rec.url)
-        window.open(rec.sourcePage || rec.url, '_blank', 'noopener');
+    case 'source': {
+      const target = rec.url || rec.sourcePage;
+      if (target) {
+        const win = window.open(target, '_blank', 'noopener,noreferrer');
+        if (!win)
+          toast('Pop-up blocked — allow pop-ups to open the source', {
+            variant: 'warn',
+          });
+      }
       break;
+    }
     case 'copy':
       navigator.clipboard
         ?.writeText(rec.url)
@@ -242,6 +249,7 @@ export function openLightbox(records, startIndex = 0, callbacks = {}) {
   const root = document.getElementById('lightboxRoot');
   root.innerHTML = TEMPLATE;
   hydrateIcons(root);
+  applyTooltips(root);
 
   refs = {
     root,
