@@ -118,12 +118,15 @@ export function isSupportedOrUnknown(url) {
   }
 }
 
-/** Google's favicon service for a domain (graceful — errors hide the img). */
-export function faviconUrl(domain, size = 32) {
+/**
+ * Favicon service for a domain (graceful — errors hide the img and the
+ * domain pin-dot remains). DuckDuckGo returns a generic icon with HTTP 200
+ * for unknown domains, avoiding the 404 console noise Google's endpoint now
+ * produces for domains without a favicon.
+ */
+export function faviconUrl(domain) {
   if (!domain) return '';
-  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
-    domain,
-  )}&sz=${size}`;
+  return `https://icons.duckduckgo.com/ip3/${encodeURIComponent(domain)}.ico`;
 }
 
 let idCounter = 0;
